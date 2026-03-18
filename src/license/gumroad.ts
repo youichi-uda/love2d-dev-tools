@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as https from 'https';
 
-const GUMROAD_PRODUCT_ID = ''; // TODO: Set after Gumroad product creation
+const GUMROAD_PRODUCT_ID = 'BKi_m1QXJpQi5S7d3sj6lQ==';
 const VERIFY_URL = 'https://api.gumroad.com/v2/licenses/verify';
 
 const SECRET_KEY_LICENSE = 'love2d.licenseKey';
