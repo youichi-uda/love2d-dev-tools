@@ -1,0 +1,280 @@
+{
+  "love.load": {
+    "prefix": "love-load",
+    "body": [
+      "function love.load()",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D load callback"
+  },
+  "love.update": {
+    "prefix": "love-update",
+    "body": [
+      "function love.update(dt)",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D update callback"
+  },
+  "love.draw": {
+    "prefix": "love-draw",
+    "body": [
+      "function love.draw()",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D draw callback"
+  },
+  "love.keypressed": {
+    "prefix": "love-keypressed",
+    "body": [
+      "function love.keypressed(key)",
+      "\tif key == \"${1:escape}\" then",
+      "\t\t$0",
+      "\tend",
+      "end"
+    ],
+    "description": "Love2D key pressed callback"
+  },
+  "love.keyreleased": {
+    "prefix": "love-keyreleased",
+    "body": [
+      "function love.keyreleased(key)",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D key released callback"
+  },
+  "love.mousepressed": {
+    "prefix": "love-mousepressed",
+    "body": [
+      "function love.mousepressed(x, y, button)",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D mouse pressed callback"
+  },
+  "love.mousereleased": {
+    "prefix": "love-mousereleased",
+    "body": [
+      "function love.mousereleased(x, y, button)",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D mouse released callback"
+  },
+  "love.mousemoved": {
+    "prefix": "love-mousemoved",
+    "body": [
+      "function love.mousemoved(x, y, dx, dy)",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D mouse moved callback"
+  },
+  "love.conf": {
+    "prefix": "love-conf",
+    "body": [
+      "function love.conf(t)",
+      "\tt.title = \"${1:My Game}\"",
+      "\tt.version = \"${2:11.5}\"",
+      "\tt.window.width = ${3:800}",
+      "\tt.window.height = ${4:600}",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D configuration function"
+  },
+  "love.gameloop": {
+    "prefix": "love-gameloop",
+    "body": [
+      "function love.load()",
+      "\t$1",
+      "end",
+      "",
+      "function love.update(dt)",
+      "\t$2",
+      "end",
+      "",
+      "function love.draw()",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D basic game loop (load + update + draw)"
+  },
+  "love.wheelmoved": {
+    "prefix": "love-wheelmoved",
+    "body": [
+      "function love.wheelmoved(x, y)",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D mouse wheel callback"
+  },
+  "love.resize": {
+    "prefix": "love-resize",
+    "body": [
+      "function love.resize(w, h)",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D window resize callback"
+  },
+  "love.focus": {
+    "prefix": "love-focus",
+    "body": [
+      "function love.focus(focused)",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D window focus callback"
+  },
+  "love.quit": {
+    "prefix": "love-quit",
+    "body": [
+      "function love.quit()",
+      "\t$0",
+      "\treturn false",
+      "end"
+    ],
+    "description": "Love2D quit callback"
+  },
+  "love.textinput": {
+    "prefix": "love-textinput",
+    "body": [
+      "function love.textinput(text)",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D text input callback"
+  },
+  "love.touchpressed": {
+    "prefix": "love-touchpressed",
+    "body": [
+      "function love.touchpressed(id, x, y, dx, dy, pressure)",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D touch pressed callback"
+  },
+  "love.gamepadpressed": {
+    "prefix": "love-gamepadpressed",
+    "body": [
+      "function love.gamepadpressed(joystick, button)",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D gamepad button pressed callback"
+  },
+  "love.errorhandler": {
+    "prefix": "love-errorhandler",
+    "body": [
+      "function love.errorhandler(msg)",
+      "\tprint(\"Error: \" .. tostring(msg))",
+      "\tprint(debug.traceback())",
+      "\t$0",
+      "end"
+    ],
+    "description": "Love2D error handler"
+  },
+  "love.class (Classic)": {
+    "prefix": "love-class",
+    "body": [
+      "local ${1:ClassName} = Object:extend()",
+      "",
+      "function ${1}:new(${2})",
+      "\t$0",
+      "end",
+      "",
+      "function ${1}:update(dt)",
+      "end",
+      "",
+      "function ${1}:draw()",
+      "end",
+      "",
+      "return ${1}"
+    ],
+    "description": "Classic library class definition"
+  },
+  "love.newImage": {
+    "prefix": "love-image",
+    "body": [
+      "local ${1:image} = love.graphics.newImage(\"${2:path/to/image.png}\")"
+    ],
+    "description": "Load an image"
+  },
+  "love.newFont": {
+    "prefix": "love-font",
+    "body": [
+      "local ${1:font} = love.graphics.newFont(\"${2:path/to/font.ttf}\", ${3:14})"
+    ],
+    "description": "Load a font"
+  },
+  "love.newSound": {
+    "prefix": "love-sound",
+    "body": [
+      "local ${1:sound} = love.audio.newSource(\"${2:path/to/sound.wav}\", \"${3|static,stream|}\")"
+    ],
+    "description": "Load a sound source"
+  },
+  "love.newCanvas": {
+    "prefix": "love-canvas",
+    "body": [
+      "local ${1:canvas} = love.graphics.newCanvas(${2:800}, ${3:600})"
+    ],
+    "description": "Create a new canvas"
+  },
+  "love.state": {
+    "prefix": "love-state",
+    "body": [
+      "local ${1:state} = {}",
+      "",
+      "function ${1}:enter()",
+      "\t$0",
+      "end",
+      "",
+      "function ${1}:update(dt)",
+      "end",
+      "",
+      "function ${1}:draw()",
+      "end",
+      "",
+      "function ${1}:keypressed(key)",
+      "end",
+      "",
+      "function ${1}:exit()",
+      "end",
+      "",
+      "return ${1}"
+    ],
+    "description": "Game state module"
+  },
+  "love.timer": {
+    "prefix": "love-timer",
+    "body": [
+      "local ${1:timer} = 0",
+      "local ${2:interval} = ${3:1}",
+      "",
+      "-- In love.update(dt):",
+      "${1} = ${1} + dt",
+      "if ${1} >= ${2} then",
+      "\t${1} = ${1} - ${2}",
+      "\t$0",
+      "end"
+    ],
+    "description": "Simple timer pattern"
+  },
+  "love.aabb": {
+    "prefix": "love-aabb",
+    "body": [
+      "local function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2)",
+      "\treturn x1 < x2 + w2 and",
+      "\t       x2 < x1 + w1 and",
+      "\t       y1 < y2 + h2 and",
+      "\t       y2 < y1 + h1",
+      "end"
+    ],
+    "description": "AABB collision detection function"
+  }
+}

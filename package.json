@@ -1,0 +1,216 @@
+{
+  "name": "love2d-dev-tools",
+  "displayName": "Love2D Dev Tools",
+  "description": "Developer tools for Love2D (LÖVE) game development — IntelliSense, debugging, hot reload, and more",
+  "version": "0.1.0",
+  "publisher": "abyo-software",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "icon": "resources/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/youichi-uda/love2d-dev-tools"
+  },
+  "homepage": "https://github.com/youichi-uda/love2d-dev-tools#readme",
+  "bugs": {
+    "url": "https://github.com/youichi-uda/love2d-dev-tools/issues"
+  },
+  "galleryBanner": {
+    "color": "#e74a99",
+    "theme": "dark"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Debuggers",
+    "Snippets",
+    "Other"
+  ],
+  "keywords": [
+    "love2d",
+    "löve",
+    "lua",
+    "game development",
+    "gamedev",
+    "game engine"
+  ],
+  "activationEvents": [
+    "workspaceContains:main.lua"
+  ],
+  "main": "./out/extension.js",
+  "l10n": "./l10n",
+  "contributes": {
+    "commands": [
+      {
+        "command": "love2d-tools.launch",
+        "title": "%command.launch%",
+        "icon": "$(play)"
+      },
+      {
+        "command": "love2d-tools.stop",
+        "title": "%command.stop%",
+        "icon": "$(debug-stop)"
+      },
+      {
+        "command": "love2d-tools.setupIntelliSense",
+        "title": "%command.setupIntelliSense%",
+        "icon": "$(lightbulb)"
+      },
+      {
+        "command": "love2d-tools.setupDebugger",
+        "title": "%command.setupDebugger%",
+        "icon": "$(debug-alt)"
+      },
+      {
+        "command": "love2d-tools.newProject",
+        "title": "%command.newProject%",
+        "icon": "$(new-folder)"
+      },
+      {
+        "command": "love2d-tools.activateLicense",
+        "title": "%command.activateLicense%",
+        "icon": "$(key)"
+      },
+      {
+        "command": "love2d-tools.deactivateLicense",
+        "title": "%command.deactivateLicense%",
+        "icon": "$(lock)"
+      },
+      {
+        "command": "love2d-tools.toggleHotReload",
+        "title": "%command.toggleHotReload%",
+        "icon": "$(zap)"
+      },
+      {
+        "command": "love2d-tools.showPreview",
+        "title": "%command.showPreview%",
+        "icon": "$(device-camera-video)"
+      },
+      {
+        "command": "love2d-tools.showPerf",
+        "title": "%command.showPerf%",
+        "icon": "$(dashboard)"
+      },
+      {
+        "command": "love2d-tools.checkAssets",
+        "title": "%command.checkAssets%",
+        "icon": "$(search)"
+      },
+      {
+        "command": "love2d-tools.buildLove",
+        "title": "%command.buildLove%",
+        "icon": "$(package)"
+      },
+      {
+        "command": "love2d-tools.jamTimer",
+        "title": "%command.jamTimer%",
+        "icon": "$(clock)"
+      },
+      {
+        "command": "love2d-tools.jamChecklist",
+        "title": "%command.jamChecklist%",
+        "icon": "$(checklist)"
+      },
+      {
+        "command": "love2d-tools.addLibrary",
+        "title": "%command.addLibrary%",
+        "icon": "$(library)"
+      },
+      {
+        "command": "love2d-tools.showConsole",
+        "title": "%command.showConsole%",
+        "icon": "$(terminal)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "love2d-tools.launch",
+        "key": "alt+l",
+        "mac": "cmd+l",
+        "when": "love2dTools.projectDetected"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "lua",
+        "path": "./snippets/love2d.json"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "love2d-tools",
+          "title": "Love2D",
+          "icon": "resources/sidebar-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "love2d-tools": [
+        {
+          "id": "love2dQuickActions",
+          "name": "%view.quickActions%",
+          "type": "webview",
+          "when": "love2dTools.projectDetected"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [],
+      "editor/context": [
+        {
+          "command": "love2d-tools.launch",
+          "group": "love2d@1",
+          "when": "love2dTools.projectDetected && resourceLangId == lua"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Love2D Dev Tools",
+      "properties": {
+        "love2d-tools.lovePath": {
+          "type": "string",
+          "default": "",
+          "markdownDescription": "%config.lovePath%"
+        },
+        "love2d-tools.loveVersion": {
+          "type": "string",
+          "default": "11.5",
+          "enum": ["11.4", "11.5"],
+          "markdownDescription": "%config.loveVersion%"
+        },
+        "love2d-tools.hotReload.debounce": {
+          "type": "number",
+          "default": 300,
+          "markdownDescription": "%config.hotReloadDebounce%"
+        },
+        "love2d-tools.bridge.port": {
+          "type": "number",
+          "default": 0,
+          "markdownDescription": "%config.bridgePort%"
+        },
+        "love2d-tools.screenshot.interval": {
+          "type": "number",
+          "default": 500,
+          "markdownDescription": "%config.screenshotInterval%"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "package": "vsce package",
+    "lint": "eslint src/",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.85.0",
+    "eslint": "^9.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^4.1.0"
+  }
+}
