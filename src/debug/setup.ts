@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
+import { detectLovePath } from '../runner/detector';
 
 /**
  * Check if Local Lua Debugger extension is installed.
@@ -48,6 +49,9 @@ export async function setupDebugger(workspaceFolder: vscode.WorkspaceFolder): Pr
     fs.mkdirSync(vscodeDir, { recursive: true });
   }
 
+  // Use the same detection logic as the launcher.
+  const lovePath = await detectLovePath() || 'love';
+
   const launchConfig = {
     version: '0.2.0',
     configurations: [
@@ -55,16 +59,18 @@ export async function setupDebugger(workspaceFolder: vscode.WorkspaceFolder): Pr
         type: 'lua-local',
         request: 'launch',
         name: 'Love2D: Debug',
-        program: { command: 'love' },
+        program: { command: lovePath },
         args: ['.', 'debug'],
         scriptRoots: ['.', 'src'],
+        env: { LOVE2D_TOOLS: '1' },
       },
       {
         type: 'lua-local',
         request: 'launch',
         name: 'Love2D: Run',
-        program: { command: 'love' },
+        program: { command: lovePath },
         args: ['.'],
+        env: { LOVE2D_TOOLS: '1' },
       },
     ],
   };

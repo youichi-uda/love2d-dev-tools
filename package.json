@@ -2,7 +2,7 @@
   "name": "love2d-dev-tools",
   "displayName": "Love2D Dev Tools",
   "description": "Developer tools for Love2D (LÖVE) game development — IntelliSense, debugging, hot reload, and more",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "publisher": "abyo-software",
   "license": "SEE LICENSE IN LICENSE.md",
   "icon": "resources/icon.png",
@@ -121,6 +121,66 @@
         "command": "love2d-tools.showConsole",
         "title": "%command.showConsole%",
         "icon": "$(terminal)"
+      },
+      {
+        "command": "love2d-tools.showRepl",
+        "title": "%command.showRepl%",
+        "icon": "$(terminal-bash)"
+      },
+      {
+        "command": "love2d-tools.refreshInspector",
+        "title": "%command.refreshInspector%",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "love2d-tools.toggleInspectorAutoRefresh",
+        "title": "%command.toggleInspectorAutoRefresh%",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "love2d-tools.refreshAssetBrowser",
+        "title": "%command.refreshAssetBrowser%",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "love2d-tools.showDependencyGraph",
+        "title": "%command.showDependencyGraph%",
+        "icon": "$(type-hierarchy)"
+      },
+      {
+        "command": "love2d-tools.toggleShaderEdit",
+        "title": "%command.toggleShaderEdit%",
+        "icon": "$(symbol-color)"
+      },
+      {
+        "command": "love2d-tools.showProfiler",
+        "title": "%command.showProfiler%",
+        "icon": "$(flame)"
+      },
+      {
+        "command": "love2d-tools.showSpriteEditor",
+        "title": "%command.showSpriteEditor%",
+        "icon": "$(symbol-ruler)"
+      },
+      {
+        "command": "love2d-tools.saveColorToPalette",
+        "title": "%command.saveColorToPalette%",
+        "icon": "$(save)"
+      },
+      {
+        "command": "love2d-tools.insertPaletteColor",
+        "title": "%command.insertPaletteColor%",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "love2d-tools.removePaletteColor",
+        "title": "%command.removePaletteColor%",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "love2d-tools.refreshPalette",
+        "title": "%command.refreshPalette%",
+        "icon": "$(refresh)"
       }
     ],
     "keybindings": [
@@ -153,15 +213,68 @@
           "name": "%view.quickActions%",
           "type": "webview",
           "when": "love2dTools.projectDetected"
+        },
+        {
+          "id": "love2dInspector",
+          "name": "%view.inspector%",
+          "when": "love2dTools.projectDetected"
+        },
+        {
+          "id": "love2dAssetBrowser",
+          "name": "%view.assetBrowser%",
+          "when": "love2dTools.projectDetected"
+        },
+        {
+          "id": "love2dColorPalette",
+          "name": "%view.colorPalette%",
+          "when": "love2dTools.projectDetected"
         }
       ]
     },
     "menus": {
-      "view/title": [],
+      "view/title": [
+        {
+          "command": "love2d-tools.refreshInspector",
+          "when": "view == love2dInspector",
+          "group": "navigation"
+        },
+        {
+          "command": "love2d-tools.toggleInspectorAutoRefresh",
+          "when": "view == love2dInspector",
+          "group": "navigation"
+        },
+        {
+          "command": "love2d-tools.refreshAssetBrowser",
+          "when": "view == love2dAssetBrowser",
+          "group": "navigation"
+        },
+        {
+          "command": "love2d-tools.refreshPalette",
+          "when": "view == love2dColorPalette",
+          "group": "navigation"
+        },
+        {
+          "command": "love2d-tools.saveColorToPalette",
+          "when": "view == love2dColorPalette",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "love2d-tools.removePaletteColor",
+          "when": "view == love2dColorPalette && viewItem == paletteColor",
+          "group": "inline"
+        }
+      ],
       "editor/context": [
         {
           "command": "love2d-tools.launch",
           "group": "love2d@1",
+          "when": "love2dTools.projectDetected && resourceLangId == lua"
+        },
+        {
+          "command": "love2d-tools.saveColorToPalette",
+          "group": "love2d@2",
           "when": "love2dTools.projectDetected && resourceLangId == lua"
         }
       ]
@@ -194,6 +307,11 @@
           "type": "number",
           "default": 500,
           "markdownDescription": "%config.screenshotInterval%"
+        },
+        "love2d-tools.inlayHints.enabled": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "%config.inlayHintsEnabled%"
         }
       }
     }

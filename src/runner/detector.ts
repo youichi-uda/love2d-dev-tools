@@ -3,6 +3,9 @@ import * as path from 'path';
 import * as fs from 'fs';
 import { execFile } from 'child_process';
 
+/** Timeout (ms) for detection subprocess calls. */
+const DETECT_TIMEOUT = 5000;
+
 /**
  * Detects the love executable path based on the current platform.
  * Checks user configuration first, then platform-specific common locations.
@@ -49,16 +52,20 @@ async function detectWindows(): Promise<string | undefined> {
 async function detectMac(): Promise<string | undefined> {
   // App bundle
   const appPath = '/Applications/love.app/Contents/MacOS/love';
-  if (fs.existsSync(appPath)) return appPath;
+  if (isExecutable(appPath)) return appPath;
 
-  // Homebrew
+  // Homebrew (Apple Silicon first, then Intel)
   const brewPaths = [
-    '/usr/local/bin/love',
     '/opt/homebrew/bin/love',
+    '/usr/local/bin/love',
   ];
   for (const p of brewPaths) {
-    if (fs.existsSync(p)) return p;
+    if (isExecutable(p)) return p;
   }
+
+  // MacPorts
+  const macPortsPath = '/opt/local/bin/love';
+  if (isExecutable(macPortsPath)) return macPortsPath;
 
   // PATH
   return findInPath('love');
@@ -73,7 +80,7 @@ async function detectLinux(): Promise<string | undefined> {
   ];
 
   for (const p of standardPaths) {
-    if (fs.existsSync(p)) return p;
+    if (isExecutable(p)) return p;
   }
 
   // Check if flatpak is available
@@ -82,6 +89,18 @@ async function detectLinux(): Promise<string | undefined> {
 
   // PATH
   return findInPath('love');
+}
+
+/**
+ * Check if a file exists and is executable.
+ */
+function isExecutable(filePath: string): boolean {
+  try {
+    fs.accessSync(filePath, fs.constants.X_OK);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 function queryWindowsRegistry(): Promise<string | undefined> {
@@ -101,7 +120,7 @@ function queryWindowsRegistry(): Promise<string | undefined> {
     let found = false;
 
     for (const key of regKeys) {
-      execFile('reg', ['query', key, '/ve'], (err, stdout) => {
+      execFile('reg', ['query', key, '/ve'], { timeout: DETECT_TIMEOUT }, (err, stdout) => {
         remaining--;
         if (!found && !err && stdout) {
           const match = stdout.match(/REG_SZ\s+(.+)/);
@@ -125,7 +144,7 @@ function queryWindowsRegistry(): Promise<string | undefined> {
 
 function checkFlatpak(): Promise<string | undefined> {
   return new Promise((resolve) => {
-    execFile('flatpak', ['info', 'org.love2d.love'], (err) => {
+    execFile('flatpak', ['info', 'org.love2d.love'], { timeout: DETECT_TIMEOUT }, (err) => {
       if (!err) {
         resolve('flatpak run org.love2d.love');
       } else {
@@ -138,7 +157,7 @@ function checkFlatpak(): Promise<string | undefined> {
 function findInPath(executable: string): Promise<string | undefined> {
   const cmd = process.platform === 'win32' ? 'where' : 'which';
   return new Promise((resolve) => {
-    execFile(cmd, [executable], (err, stdout) => {
+    execFile(cmd, [executable], { timeout: DETECT_TIMEOUT }, (err, stdout) => {
       if (!err && stdout) {
         const result = stdout.trim().split('\n')[0].trim();
         if (result && fs.existsSync(result)) {
@@ -152,15 +171,48 @@ function findInPath(executable: string): Promise<string | undefined> {
 }
 
 /**
+ * Parse a flatpak-style command string into [command, ...args].
+ * E.g. 'flatpak run org.love2d.love' → ['flatpak', ['run', 'org.love2d.love']]
+ */
+export function parseFlatpakCommand(lovePath: string): { cmd: string; args: string[] } {
+  const firstSpace = lovePath.indexOf(' ');
+  const cmd = lovePath.substring(0, firstSpace);
+  const rest = lovePath.substring(firstSpace + 1).trim();
+  // Split remaining args, preserving quoted strings
+  const args: string[] = [];
+  let current = '';
+  let inQuote = false;
+  let quoteChar = '';
+  for (const ch of rest) {
+    if (inQuote) {
+      if (ch === quoteChar) {
+        inQuote = false;
+      } else {
+        current += ch;
+      }
+    } else if (ch === '"' || ch === "'") {
+      inQuote = true;
+      quoteChar = ch;
+    } else if (ch === ' ') {
+      if (current) { args.push(current); current = ''; }
+    } else {
+      current += ch;
+    }
+  }
+  if (current) args.push(current);
+  return { cmd, args };
+}
+
+/**
  * Get Love2D version by running `love --version`.
  */
 export function getLoveVersion(lovePath: string): Promise<string | undefined> {
   return new Promise((resolve) => {
     // Flatpak command needs special handling
     if (lovePath.startsWith('flatpak ')) {
-      const args = lovePath.split(' ').slice(1);
+      const { args } = parseFlatpakCommand(lovePath);
       args.push('--version');
-      execFile('flatpak', args, (err, stdout) => {
+      execFile('flatpak', args, { timeout: DETECT_TIMEOUT }, (err, stdout) => {
         if (!err && stdout) {
           resolve(parseVersion(stdout));
         } else {
@@ -170,7 +222,7 @@ export function getLoveVersion(lovePath: string): Promise<string | undefined> {
       return;
     }
 
-    execFile(lovePath, ['--version'], (err, stdout) => {
+    execFile(lovePath, ['--version'], { timeout: DETECT_TIMEOUT }, (err, stdout) => {
       if (!err && stdout) {
         resolve(parseVersion(stdout));
       } else {

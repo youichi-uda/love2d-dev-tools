@@ -53,13 +53,38 @@ export class QuickActionsProvider implements vscode.WebviewViewProvider {
     ${b('love2d-tools.setupIntelliSense', '&#x2699;', vscode.l10n.t('Setup IntelliSense'))}
     ${b('love2d-tools.setupDebugger', '&#x1F41E;', vscode.l10n.t('Setup Debugger'))}
     ${b('love2d-tools.newProject', '+', vscode.l10n.t('New Project'))}
+    ${b('love2d-tools.addLibrary', '&#x1F4DA;', vscode.l10n.t('Add Library'))}
+  </div>
+
+  <div class="section">
+    <div class="section-title">${vscode.l10n.t('Tools')}</div>
+    ${b('love2d-tools.showConsole', '&#x1F4DD;', vscode.l10n.t('Structured Console'))}
+    ${b('love2d-tools.checkAssets', '&#x1F50D;', vscode.l10n.t('Check Assets'))}
+    ${b('love2d-tools.showDependencyGraph', '&#x1F517;', vscode.l10n.t('Dependency Graph'))}
   </div>
 
   <div class="section">
     <div class="section-title">${vscode.l10n.t('Pro Features')}</div>
-    ${b('love2d-tools.activateLicense', '&#x26A1;', vscode.l10n.t('Hot Reload'), true)}
-    ${b('love2d-tools.activateLicense', '&#x1F4F7;', vscode.l10n.t('Screenshot Preview'), true)}
-    ${b('love2d-tools.activateLicense', '&#x1F4CA;', vscode.l10n.t('Performance Monitor'), true)}
+    ${b('love2d-tools.toggleHotReload', '&#x26A1;', vscode.l10n.t('Hot Reload'), true)}
+    ${b('love2d-tools.showRepl', '&#x1F4BB;', vscode.l10n.t('Live REPL'), true)}
+    ${b('love2d-tools.showPreview', '&#x1F4F7;', vscode.l10n.t('Screenshot Preview'), true)}
+    ${b('love2d-tools.showPerf', '&#x1F4CA;', vscode.l10n.t('Performance Monitor'), true)}
+    ${b('love2d-tools.toggleShaderEdit', '&#x1F3A8;', vscode.l10n.t('Shader Live Edit'), true)}
+    ${b('love2d-tools.showProfiler', '&#x1F525;', vscode.l10n.t('Profiler'), true)}
+    ${b('love2d-tools.showSpriteEditor', '&#x1F5BC;', vscode.l10n.t('Sprite/Quad Editor'), true)}
+  </div>
+
+  <div class="section">
+    <div class="section-title">${vscode.l10n.t('Game Jam')}</div>
+    ${b('love2d-tools.buildLove', '&#x1F4E6;', vscode.l10n.t('Build .love'), true)}
+    ${b('love2d-tools.jamTimer', '&#x23F1;', vscode.l10n.t('Jam Timer'), true)}
+    ${b('love2d-tools.jamChecklist', '&#x2611;', vscode.l10n.t('Jam Checklist'), true)}
+  </div>
+
+  <div class="section">
+    <div class="section-title">${vscode.l10n.t('License')}</div>
+    ${b('love2d-tools.activateLicense', '&#x1F511;', vscode.l10n.t('Activate License'))}
+    ${b('love2d-tools.deactivateLicense', '&#x1F512;', vscode.l10n.t('Deactivate License'))}
   </div>`;
 
     return /* html */ `<!DOCTYPE html>

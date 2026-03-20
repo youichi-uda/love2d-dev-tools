@@ -76,9 +76,19 @@ describe('gamejam/mode', () => {
     jam.dispose();
   });
 
-  it('should show checklist', async () => {
+  it('should show checklist with auto-detected items', async () => {
     const vscode = await import('vscode');
     const pickSpy = vi.spyOn(vscode.window, 'showQuickPick').mockResolvedValue(undefined);
+
+    // Mock workspaceFolders to point at tmpDir
+    Object.defineProperty(vscode.workspace, 'workspaceFolders', {
+      value: [{ uri: { fsPath: tmpDir }, name: 'test', index: 0 }],
+      configurable: true,
+    });
+
+    // Create a minimal project structure
+    fs.writeFileSync(path.join(tmpDir, 'main.lua'), 'function love.load() end', 'utf-8');
+    fs.writeFileSync(path.join(tmpDir, 'conf.lua'), 't.title = "My Jam Game"', 'utf-8');
 
     const { GameJamMode } = await import('../gamejam/mode');
     const jam = new GameJamMode();
@@ -88,7 +98,11 @@ describe('gamejam/mode', () => {
     expect(pickSpy).toHaveBeenCalled();
     const items = pickSpy.mock.calls[0][0] as { label: string }[];
     expect(items.length).toBeGreaterThan(0);
-    expect(items[0].label).toContain('Game runs');
+    // Should contain auto-detected check items
+    expect(items.some(i => i.label.includes('Game title'))).toBe(true);
+    expect(items.some(i => i.label.includes('No Lua errors'))).toBe(true);
+    expect(items.some(i => i.label.includes('.love file'))).toBe(true);
+    expect(items.some(i => i.label.includes('README'))).toBe(true);
 
     jam.dispose();
   });

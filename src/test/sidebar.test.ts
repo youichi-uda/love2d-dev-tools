@@ -42,6 +42,20 @@ describe('sidebar/quickActions', () => {
     expect(capturedHtml).toContain('love2d-tools.setupIntelliSense');
     expect(capturedHtml).toContain('love2d-tools.setupDebugger');
     expect(capturedHtml).toContain('love2d-tools.newProject');
+    // Pro features should link to actual feature commands, not activateLicense
+    expect(capturedHtml).toContain('love2d-tools.toggleHotReload');
+    expect(capturedHtml).toContain('love2d-tools.showPreview');
+    expect(capturedHtml).toContain('love2d-tools.showPerf');
+    expect(capturedHtml).toContain('love2d-tools.showConsole');
+    expect(capturedHtml).toContain('love2d-tools.checkAssets');
+    expect(capturedHtml).toContain('love2d-tools.addLibrary');
+    // Game Jam section
+    expect(capturedHtml).toContain('love2d-tools.buildLove');
+    expect(capturedHtml).toContain('love2d-tools.jamTimer');
+    expect(capturedHtml).toContain('love2d-tools.jamChecklist');
+    // License section
+    expect(capturedHtml).toContain('love2d-tools.activateLicense');
+    expect(capturedHtml).toContain('love2d-tools.deactivateLicense');
     expect(capturedHtml).toContain('PRO');
   });
 

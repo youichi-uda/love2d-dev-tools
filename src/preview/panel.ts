@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as fs from 'fs';
 import { BridgeClient } from '../bridge/client';
 
 /**
@@ -52,13 +53,21 @@ export class ScreenshotPreviewPanel {
       try {
         const response = await this.bridge.screenshot();
         if (response.success && response.data) {
-          this.panel.webview.postMessage({
-            type: 'screenshot',
-            data: response.data as string,
-          });
+          // bridge.lua saves screenshot to a file; read it and send as base64
+          const filePath = response.data as string;
+          try {
+            const buf = fs.readFileSync(filePath);
+            const b64 = buf.toString('base64');
+            this.panel.webview.postMessage({
+              type: 'screenshot',
+              data: b64,
+            });
+          } catch {
+            // File not ready yet
+          }
         }
       } catch {
-        // Silently skip failed captures
+        // Skip failed captures
       }
     }, intervalMs);
   }

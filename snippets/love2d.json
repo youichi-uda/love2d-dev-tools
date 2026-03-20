@@ -1,6 +1,6 @@
 {
   "love.load": {
-    "prefix": "love-load",
+    "prefix": "loveload",
     "body": [
       "function love.load()",
       "\t$0",
@@ -9,7 +9,7 @@
     "description": "Love2D load callback"
   },
   "love.update": {
-    "prefix": "love-update",
+    "prefix": "loveupdate",
     "body": [
       "function love.update(dt)",
       "\t$0",
@@ -18,7 +18,7 @@
     "description": "Love2D update callback"
   },
   "love.draw": {
-    "prefix": "love-draw",
+    "prefix": "lovedraw",
     "body": [
       "function love.draw()",
       "\t$0",
@@ -27,7 +27,7 @@
     "description": "Love2D draw callback"
   },
   "love.keypressed": {
-    "prefix": "love-keypressed",
+    "prefix": "lovekeypressed",
     "body": [
       "function love.keypressed(key)",
       "\tif key == \"${1:escape}\" then",
@@ -38,7 +38,7 @@
     "description": "Love2D key pressed callback"
   },
   "love.keyreleased": {
-    "prefix": "love-keyreleased",
+    "prefix": "lovekeyreleased",
     "body": [
       "function love.keyreleased(key)",
       "\t$0",
@@ -47,7 +47,7 @@
     "description": "Love2D key released callback"
   },
   "love.mousepressed": {
-    "prefix": "love-mousepressed",
+    "prefix": "lovemousepressed",
     "body": [
       "function love.mousepressed(x, y, button)",
       "\t$0",
@@ -56,7 +56,7 @@
     "description": "Love2D mouse pressed callback"
   },
   "love.mousereleased": {
-    "prefix": "love-mousereleased",
+    "prefix": "lovemousereleased",
     "body": [
       "function love.mousereleased(x, y, button)",
       "\t$0",
@@ -65,7 +65,7 @@
     "description": "Love2D mouse released callback"
   },
   "love.mousemoved": {
-    "prefix": "love-mousemoved",
+    "prefix": "lovemousemoved",
     "body": [
       "function love.mousemoved(x, y, dx, dy)",
       "\t$0",
@@ -74,7 +74,7 @@
     "description": "Love2D mouse moved callback"
   },
   "love.conf": {
-    "prefix": "love-conf",
+    "prefix": "loveconf",
     "body": [
       "function love.conf(t)",
       "\tt.title = \"${1:My Game}\"",
@@ -87,7 +87,7 @@
     "description": "Love2D configuration function"
   },
   "love.gameloop": {
-    "prefix": "love-gameloop",
+    "prefix": "lovegameloop",
     "body": [
       "function love.load()",
       "\t$1",
@@ -104,7 +104,7 @@
     "description": "Love2D basic game loop (load + update + draw)"
   },
   "love.wheelmoved": {
-    "prefix": "love-wheelmoved",
+    "prefix": "lovewheelmoved",
     "body": [
       "function love.wheelmoved(x, y)",
       "\t$0",
@@ -113,7 +113,7 @@
     "description": "Love2D mouse wheel callback"
   },
   "love.resize": {
-    "prefix": "love-resize",
+    "prefix": "loveresize",
     "body": [
       "function love.resize(w, h)",
       "\t$0",
@@ -122,7 +122,7 @@
     "description": "Love2D window resize callback"
   },
   "love.focus": {
-    "prefix": "love-focus",
+    "prefix": "lovefocus",
     "body": [
       "function love.focus(focused)",
       "\t$0",
@@ -131,7 +131,7 @@
     "description": "Love2D window focus callback"
   },
   "love.quit": {
-    "prefix": "love-quit",
+    "prefix": "lovequit",
     "body": [
       "function love.quit()",
       "\t$0",
@@ -141,7 +141,7 @@
     "description": "Love2D quit callback"
   },
   "love.textinput": {
-    "prefix": "love-textinput",
+    "prefix": "lovetextinput",
     "body": [
       "function love.textinput(text)",
       "\t$0",
@@ -150,7 +150,7 @@
     "description": "Love2D text input callback"
   },
   "love.touchpressed": {
-    "prefix": "love-touchpressed",
+    "prefix": "lovetouchpressed",
     "body": [
       "function love.touchpressed(id, x, y, dx, dy, pressure)",
       "\t$0",
@@ -159,7 +159,7 @@
     "description": "Love2D touch pressed callback"
   },
   "love.gamepadpressed": {
-    "prefix": "love-gamepadpressed",
+    "prefix": "lovegamepadpressed",
     "body": [
       "function love.gamepadpressed(joystick, button)",
       "\t$0",
@@ -168,7 +168,7 @@
     "description": "Love2D gamepad button pressed callback"
   },
   "love.errorhandler": {
-    "prefix": "love-errorhandler",
+    "prefix": "loveerrorhandler",
     "body": [
       "function love.errorhandler(msg)",
       "\tprint(\"Error: \" .. tostring(msg))",
@@ -179,7 +179,7 @@
     "description": "Love2D error handler"
   },
   "love.class (Classic)": {
-    "prefix": "love-class",
+    "prefix": "loveclass",
     "body": [
       "local ${1:ClassName} = Object:extend()",
       "",
@@ -198,35 +198,35 @@
     "description": "Classic library class definition"
   },
   "love.newImage": {
-    "prefix": "love-image",
+    "prefix": "loveimage",
     "body": [
       "local ${1:image} = love.graphics.newImage(\"${2:path/to/image.png}\")"
     ],
     "description": "Load an image"
   },
   "love.newFont": {
-    "prefix": "love-font",
+    "prefix": "lovefont",
     "body": [
       "local ${1:font} = love.graphics.newFont(\"${2:path/to/font.ttf}\", ${3:14})"
     ],
     "description": "Load a font"
   },
   "love.newSound": {
-    "prefix": "love-sound",
+    "prefix": "lovesound",
     "body": [
       "local ${1:sound} = love.audio.newSource(\"${2:path/to/sound.wav}\", \"${3|static,stream|}\")"
     ],
     "description": "Load a sound source"
   },
   "love.newCanvas": {
-    "prefix": "love-canvas",
+    "prefix": "lovecanvas",
     "body": [
       "local ${1:canvas} = love.graphics.newCanvas(${2:800}, ${3:600})"
     ],
     "description": "Create a new canvas"
   },
   "love.state": {
-    "prefix": "love-state",
+    "prefix": "lovestate",
     "body": [
       "local ${1:state} = {}",
       "",
@@ -251,7 +251,7 @@
     "description": "Game state module"
   },
   "love.timer": {
-    "prefix": "love-timer",
+    "prefix": "lovetimer",
     "body": [
       "local ${1:timer} = 0",
       "local ${2:interval} = ${3:1}",
@@ -266,7 +266,7 @@
     "description": "Simple timer pattern"
   },
   "love.aabb": {
-    "prefix": "love-aabb",
+    "prefix": "loveaabb",
     "body": [
       "local function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2)",
       "\treturn x1 < x2 + w2 and",

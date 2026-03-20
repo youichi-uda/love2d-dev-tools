@@ -17,35 +17,14 @@ export interface LibraryInfo {
   files: string[];    // files to download
 }
 
-/** Registry of known Love2D libraries. */
+/**
+ * Registry of known Love2D libraries.
+ * Selected by GitHub stars (500+) with one library per category.
+ */
 export const LIBRARY_REGISTRY: LibraryInfo[] = [
   {
-    name: 'Lume',
-    description: 'Collection of useful Lua utility functions',
-    repo: 'rxi/lume',
-    mainFile: 'lume.lua',
-    branch: 'master',
-    files: ['lume.lua'],
-  },
-  {
-    name: 'Classic',
-    description: 'Tiny class module for Lua',
-    repo: 'rxi/classic',
-    mainFile: 'classic.lua',
-    branch: 'master',
-    files: ['classic.lua'],
-  },
-  {
-    name: 'STI (Simple Tiled Implementation)',
-    description: 'Tiled map loader and renderer',
-    repo: 'karai17/Simple-Tiled-Implementation',
-    mainFile: 'sti/init.lua',
-    branch: 'master',
-    files: ['sti/init.lua', 'sti/utils.lua', 'sti/plugins/box2d.lua'],
-  },
-  {
     name: 'HUMP',
-    description: 'Helper Utilities for Massive Progression — camera, gamestates, timer, vector',
+    description: 'Camera, gamestates, timer, vector (★1.3k)',
     repo: 'vrld/hump',
     mainFile: 'hump/camera.lua',
     branch: 'master',
@@ -55,28 +34,68 @@ export const LIBRARY_REGISTRY: LibraryInfo[] = [
     ],
   },
   {
-    name: 'Windfield',
-    description: 'Physics module for Love2D',
-    repo: 'a327ex/windfield',
-    mainFile: 'windfield/init.lua',
+    name: 'Lume',
+    description: 'Lua utility functions for gamedev (★1.2k)',
+    repo: 'rxi/lume',
+    mainFile: 'lume.lua',
     branch: 'master',
-    files: ['windfield/init.lua'],
+    files: ['lume.lua'],
+  },
+  {
+    name: 'Bump',
+    description: 'AABB collision detection (★1.1k)',
+    repo: 'kikito/bump.lua',
+    mainFile: 'bump.lua',
+    branch: 'master',
+    files: ['bump.lua'],
+  },
+  {
+    name: 'STI (Simple Tiled Implementation)',
+    description: 'Tiled map loader and renderer (★1.0k)',
+    repo: 'karai17/Simple-Tiled-Implementation',
+    mainFile: 'sti/init.lua',
+    branch: 'master',
+    files: ['sti/init.lua', 'sti/utils.lua', 'sti/plugins/box2d.lua'],
+  },
+  {
+    name: 'Classic',
+    description: 'Tiny class module for Lua (★1.0k)',
+    repo: 'rxi/classic',
+    mainFile: 'classic.lua',
+    branch: 'master',
+    files: ['classic.lua'],
   },
   {
     name: 'Anim8',
-    description: 'Animation library for Love2D',
+    description: 'Animation library for Love2D (★950)',
     repo: 'kikito/anim8',
     mainFile: 'anim8.lua',
     branch: 'main',
     files: ['anim8.lua'],
   },
   {
-    name: 'Bump',
-    description: 'Collision detection library for axis-aligned rectangles',
-    repo: 'kikito/bump.lua',
-    mainFile: 'bump.lua',
+    name: 'Moonshine',
+    description: 'Postprocessing shader effects (★695)',
+    repo: 'vrld/moonshine',
+    mainFile: 'moonshine/init.lua',
     branch: 'master',
-    files: ['bump.lua'],
+    files: ['init.lua'],
+  },
+  {
+    name: 'Push',
+    description: 'Resolution-handling library (★623)',
+    repo: 'Ulydev/push',
+    mainFile: 'push.lua',
+    branch: 'master',
+    files: ['push.lua'],
+  },
+  {
+    name: 'Flux',
+    description: 'Fast, lightweight tweening library (★472)',
+    repo: 'rxi/flux',
+    mainFile: 'flux.lua',
+    branch: 'master',
+    files: ['flux.lua'],
   },
 ];
 

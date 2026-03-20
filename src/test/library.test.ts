@@ -15,13 +15,16 @@ describe('library/manager', () => {
     const { LIBRARY_REGISTRY } = await import('../library/manager');
 
     const names = LIBRARY_REGISTRY.map(l => l.name);
-    expect(names).toContain('Lume');
-    expect(names).toContain('Classic');
-    expect(names).toContain('STI (Simple Tiled Implementation)');
     expect(names).toContain('HUMP');
-    expect(names).toContain('Windfield');
-    expect(names).toContain('Anim8');
+    expect(names).toContain('Lume');
     expect(names).toContain('Bump');
+    expect(names).toContain('STI (Simple Tiled Implementation)');
+    expect(names).toContain('Classic');
+    expect(names).toContain('Anim8');
+    expect(names).toContain('Moonshine');
+    expect(names).toContain('Push');
+    expect(names).toContain('Flux');
+    expect(LIBRARY_REGISTRY).toHaveLength(9);
   });
 
   it('registry entries should have required fields', async () => {

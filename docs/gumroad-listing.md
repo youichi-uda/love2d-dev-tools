@@ -30,7 +30,7 @@ $12+
 ## Summary
 
 ```
-Pro upgrade for Love2D Dev Tools — the VS Code extension for LÖVE game development. Hot reload, screenshot preview, performance monitor, asset checker, game jam mode, and library manager.
+Pro upgrade for Love2D Dev Tools — the VS Code extension for LÖVE game development. 14 Pro features: hot reload, live REPL, game state inspector, profiler, shader live edit, sprite editor, and more.
 ```
 
 ## Tags
@@ -62,32 +62,67 @@ Love2D Dev Tools Pro
 
 Unlock the full power of Love2D Dev Tools — the VS Code extension purpose-built for Love2D (LÖVE) game development.
 
-The free version gives you everything you need to get started: cross-platform game launch, IntelliSense, debugger setup, project templates, snippets, console output, and a sidebar with quick actions. Pro adds 7 powerful features for serious game developers.
+The free version gives you 18 features to get started: cross-platform game launch, IntelliSense, debugger setup, Go to Definition, Inlay Hints, Color Picker, diagnostics, code actions, snippets, and more. Pro adds 14 powerful features for serious game developers.
 
 
 HOT RELOAD
 
-Save your Lua file and see changes reflected in the running game instantly — without restarting. The bridge module clears the module's package.loaded entry and re-requires it, preserving game state. Configurable debounce interval.
+Save your Lua file and see changes reflected in the running game instantly — without restarting. The bridge merges new module contents into the existing table, so all references throughout your code stay valid. No more stale pointers. Configurable debounce interval.
+
+
+LIVE REPL
+
+Execute Lua code directly in the running game from a VS Code webview panel. Type "return love.timer.getFPS()" and see the result immediately. Change background color, inspect variables, test functions — all without restarting. Command history with arrow keys.
+
+
+GAME STATE INSPECTOR
+
+Browse global variables and tables in a sidebar tree view. Expand nested tables on click. Auto-refresh keeps the view up to date as the game runs. See what's really happening inside your game at runtime.
+
+
+LUA PROFILER
+
+Start/stop profiling with debug.sethook. Results displayed as a sortable table showing function name, source file, call count, total time, and self time. Self-time heatmap highlights the hottest functions. Find your bottlenecks fast.
 
 
 SCREENSHOT PREVIEW
 
-A VS Code webview panel that periodically captures screenshots from your running game via the bridge. See your game without switching windows. Configurable capture interval (default 500ms). Uses love.graphics.captureScreenshot under the hood.
-
-
-STRUCTURED CONSOLE
-
-Enhanced console that receives structured log messages from the bridge. Table contents displayed as a tree, log levels color-coded (INFO/WARN/ERROR/DEBUG), timestamped, and filterable. Goes beyond the free version's stdout/stderr pipe.
-
-
-ASSET REFERENCE CHECKER
-
-Scans your Lua code for asset-loading calls — love.graphics.newImage, love.audio.newSource, love.graphics.newFont, love.image.newImageData, love.video.newVideo, and more. Validates that every referenced file path actually exists on disk. Missing assets appear as VS Code diagnostics (yellow squiggles) in real-time.
+A VS Code webview panel that periodically captures screenshots from your running game via the bridge. See your game without switching windows. Configurable capture interval (default 500ms).
 
 
 PERFORMANCE MONITOR
 
-A dedicated VS Code webview panel showing live performance data from your running game: FPS, frame time (ms), Lua memory usage (MB), draw call count, and texture memory. Color-coded FPS indicator (green/yellow/red). Updated every second via the bridge.
+Live FPS, frame time (ms), Lua memory usage (MB), draw call count, and texture memory in a dedicated webview panel. Color-coded FPS indicator (green/yellow/red). Updated every second via the bridge.
+
+
+ASSET BROWSER
+
+Sidebar tree view of all project assets — images, sounds, fonts, and shaders. Click an image to preview it. Detects unused assets (not referenced in any Lua file) and marks them. Keep your project clean.
+
+
+DEPENDENCY GRAPH
+
+Interactive Mermaid.js visualization of your require() dependency tree. Click any node to open the source file. Circular dependencies are highlighted with dotted lines. Understand your project structure at a glance.
+
+
+SHADER LIVE EDIT
+
+Save a .glsl file and the shader is compiled and applied to the running game instantly via the bridge. See your shader changes in real-time without restarting. Compilation errors are reported back to VS Code.
+
+
+SPRITE/QUAD HELPER
+
+Open a spritesheet image in a visual editor. Drag to select rectangular regions. Each selection generates a love.graphics.newQuad() call with the correct coordinates. Copy all quads to clipboard and paste into your code. No more manual pixel counting.
+
+
+STRUCTURED CONSOLE
+
+Enhanced console that receives structured log messages from the bridge. Log levels color-coded (INFO/WARN/ERROR/DEBUG), timestamped, and filterable. Table contents displayed as a tree. Goes beyond the free version's stdout/stderr pipe.
+
+
+ASSET REFERENCE CHECKER
+
+Scans your Lua code for asset-loading calls — love.graphics.newImage, love.audio.newSource, love.graphics.newFont, love.image.newImageData, love.video.newVideo, and more. Validates that every referenced file path actually exists on disk. Missing assets appear as VS Code diagnostics in real-time.
 
 
 GAME JAM MODE
@@ -117,18 +152,25 @@ HOW IT WORKS
 1. Install Love2D Dev Tools from the VS Code Marketplace (free)
 2. Purchase this Pro license
 3. Open Command Palette and run: Love2D: Activate Pro License
-4. Enter your license key — all Pro features unlock immediately
+4. Enter your license key — all 14 Pro features unlock immediately
 
 One-time purchase. No subscription. Works offline after activation.
 
 
-FREE VERSION (11 features included at no cost)
+FREE VERSION (18 features included at no cost)
 
 - Cross-platform game launch (Windows / Mac / Linux / Flatpak / Snap)
 - Love2D API IntelliSense (lua-language-server + type definitions auto-setup)
 - One-click debugger setup (launch.json generation for Local Lua Debugger)
+- Go to Definition (require to file, local function definitions)
+- Find All References (workspace-wide symbol search)
+- Document Symbols (Ctrl+Shift+O outline)
+- Inlay Hints (inline parameter names for Love2D API calls)
+- Enhanced Diagnostics (unused require detection with gray-out)
+- Code Actions (remove unused requires, generate functions)
+- Color Picker (inline swatches for setColor and {r,g,b,a} tables, 0-1 range)
 - Project template generator (Minimal / Game Jam / State Machine)
-- 26 code snippets (love.load, love.update, love.draw, AABB collision, Classic class, and more)
+- 26 code snippets (loveload, loveupdate, lovedraw, lovegameloop, loveclass, and more)
 - Console output (stdout/stderr piped to VS Code Output Channel on all platforms)
 - Status bar (Love2D version display, game run state, one-click launch)
 - Sidebar with Quick Actions panel
@@ -156,7 +198,7 @@ Recommended:
 SUPPORT
 
 GitHub Issues: https://github.com/youichi-uda/love2d-dev-tools/issues
-Discord: https://discord.gg/CDFmWGkfDC
+Discord: https://discord.gg/WraE9PMGj6
 ```
 
 ---
@@ -183,6 +225,6 @@ Product IDの取得方法:
 - サイズ: 1280x720px推奨
 - 背景: ダークテーマ (#1e1e1e)
 - アクセントカラー: #e74a99（Love2Dのハートロゴに合わせたピンク/マゼンタ）
-- テキスト: 「Love2D Dev Tools Pro」「11 Free + 7 Pro Features」
+- テキスト: 「Love2D Dev Tools Pro」「18 Free + 14 Pro Features」
 - モチーフ: ハートアイコン
 - 内容: VS Code画面にLove2Dコード + スクリーンショットプレビュー + パフォーマンスモニターを表示

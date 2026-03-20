@@ -113,7 +113,10 @@ export class AssetChecker {
     if (!folders) return undefined;
 
     for (const folder of folders) {
-      if (uri.fsPath.startsWith(folder.uri.fsPath)) {
+      // Use path.relative for reliable cross-platform path comparison
+      // (avoids case-sensitivity and trailing-separator issues)
+      const rel = path.relative(folder.uri.fsPath, uri.fsPath);
+      if (!rel.startsWith('..') && !path.isAbsolute(rel)) {
         const mainLua = path.join(folder.uri.fsPath, 'main.lua');
         if (fs.existsSync(mainLua)) {
           return folder.uri.fsPath;

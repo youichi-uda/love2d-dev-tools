@@ -34,8 +34,11 @@ local function startServer()
     local _, assignedPort = server:getsockname()
     PORT = assignedPort
 
-    -- Write port to file so the extension can discover it
-    local portFile = ".love2d-tools-port"
+    -- Write port to file so the extension can discover it.
+    -- Use love.filesystem.getSource() for absolute path so the extension
+    -- can find the file regardless of CWD.
+    local sourceDir = love.filesystem.getSource()
+    local portFile = sourceDir .. "/.love2d-tools-port"
     local f = io.open(portFile, "w")
     if f then
         f:write(tostring(PORT))
@@ -48,7 +51,7 @@ end
 --- Send a JSON message to the connected client.
 local function send(data)
     if not client then return end
-    local ok, err = client:send(require("json") and require("json").encode(data) .. "\n" or Bridge._encode(data) .. "\n")
+    local ok, err = client:send(Bridge._encode(data) .. "\n")
     if not ok then
         originalPrint("[bridge] Send error: " .. tostring(err))
         client:close()
@@ -60,7 +63,12 @@ end
 function Bridge._encode(value)
     local t = type(value)
     if t == "string" then
-        return '"' .. value:gsub('\\', '\\\\'):gsub('"', '\\"'):gsub('\n', '\\n'):gsub('\r', '\\r'):gsub('\t', '\\t') .. '"'
+        local escaped = value:gsub('\\', '\\\\'):gsub('"', '\\"'):gsub('\n', '\\n'):gsub('\r', '\\r'):gsub('\t', '\\t')
+        -- Escape remaining control characters (U+0000–U+001F) as \uXXXX
+        escaped = escaped:gsub('[%z\1-\31]', function(c)
+            return string.format('\\u%04x', c:byte())
+        end)
+        return '"' .. escaped .. '"'
     elseif t == "number" then
         return tostring(value)
     elseif t == "boolean" then
@@ -111,13 +119,43 @@ local function handleCommand(line)
     if msg.cmd == "reload" then
         local moduleName = msg.module
         if moduleName and package.loaded[moduleName] then
+            local oldModule = package.loaded[moduleName]
             package.loaded[moduleName] = nil
-            local ok, err = pcall(require, moduleName)
+            local ok, newModule = pcall(require, moduleName)
             if ok then
+                -- If both old and new are tables, merge new keys/functions
+                -- into the old table so existing references stay valid.
+                if type(oldModule) == "table" and type(newModule) == "table" then
+                    -- Remove keys not in newModule
+                    for k in pairs(oldModule) do
+                        if newModule[k] == nil then
+                            oldModule[k] = nil
+                        end
+                    end
+                    -- Copy all keys from newModule into oldModule
+                    for k, v in pairs(newModule) do
+                        oldModule[k] = v
+                    end
+                    -- Fix __index self-references:
+                    -- If newModule.__index points to newModule itself,
+                    -- redirect it to oldModule so metatables work correctly.
+                    if rawget(oldModule, "__index") == newModule then
+                        oldModule.__index = oldModule
+                    end
+                    -- Preserve metatable if new one has it
+                    local mt = getmetatable(newModule)
+                    if mt then
+                        setmetatable(oldModule, mt)
+                    end
+                    -- Point package.loaded back to old table reference
+                    package.loaded[moduleName] = oldModule
+                end
                 response.success = true
             else
+                -- Restore old module on failure
+                package.loaded[moduleName] = oldModule
                 response.success = false
-                response.error = tostring(err)
+                response.error = tostring(newModule)
             end
         else
             response.success = false
@@ -125,12 +163,26 @@ local function handleCommand(line)
         end
 
     elseif msg.cmd == "screenshot" then
+        -- Save screenshot to a temp file; send the file path back.
+        -- This avoids sending large base64 data over TCP.
+        local sourceDir = love.filesystem.getSource()
+        local screenshotPath = sourceDir .. "/.love2d-tools-screenshot.png"
         love.graphics.captureScreenshot(function(imageData)
-            local fileData = imageData:encode("png")
-            local bytes = fileData:getString()
-            -- Base64 encode
-            local b64 = Bridge._base64(bytes)
-            send({ id = id, type = "response", success = true, data = b64 })
+            local ok2, err2 = pcall(function()
+                local fileData = imageData:encode("png")
+                local bytes = fileData:getString()
+                local f = io.open(screenshotPath, "wb")
+                if f then
+                    f:write(bytes)
+                    f:close()
+                    send({ id = id, type = "response", success = true, data = screenshotPath })
+                else
+                    send({ id = id, type = "response", success = false, error = "Cannot write screenshot file" })
+                end
+            end)
+            if not ok2 then
+                send({ id = id, type = "response", success = false, error = tostring(err2) })
+            end
         end)
         return -- Response sent asynchronously from callback
 
@@ -162,6 +214,158 @@ local function handleCommand(line)
             drawCalls = love.graphics.getStats and love.graphics.getStats().drawcalls or 0,
             textureMemory = love.graphics.getStats and love.graphics.getStats().texturememory or 0,
         }
+
+    elseif msg.cmd == "inspect" then
+        -- Inspect a Lua table path and return its children
+        local targetPath = msg.path or ""
+        local target = _G
+
+        if targetPath ~= "" then
+            for part in targetPath:gmatch("[^%.]+") do
+                if type(target) == "table" then
+                    target = target[part]
+                else
+                    target = nil
+                    break
+                end
+            end
+        end
+
+        if target == nil then
+            response.success = false
+            response.error = "Path not found: " .. targetPath
+        elseif type(target) ~= "table" then
+            response.success = true
+            response.data = {}
+        else
+            local entries = {}
+            local count = 0
+            for k, v in pairs(target) do
+                if count >= 200 then break end -- Limit entries
+                local keyStr = tostring(k)
+                -- Skip internal/bridge keys at root level
+                if targetPath == "" and (keyStr:sub(1,1) == "_" and keyStr ~= "_G") then
+                    -- skip private globals
+                elseif targetPath == "" and (keyStr == "Bridge" or keyStr == "socket" or keyStr == "server" or keyStr == "client" or keyStr == "buffer") then
+                    -- skip bridge internals
+                else
+                    entries[#entries + 1] = {
+                        key = keyStr,
+                        value = type(v) == "table" and ("{...}" ) or tostring(v),
+                        type = type(v),
+                        hasChildren = type(v) == "table",
+                    }
+                    count = count + 1
+                end
+            end
+            -- Sort by key name
+            table.sort(entries, function(a, b) return a.key < b.key end)
+            response.success = true
+            response.data = entries
+        end
+
+    elseif msg.cmd == "shader" then
+        -- Receive GLSL shader code and compile it
+        local code = msg.code
+        if code then
+            local ok, shaderOrErr = pcall(love.graphics.newShader, code)
+            if ok then
+                -- Store the shader globally so the game can use it
+                _G._love2d_tools_shader = shaderOrErr
+                response.success = true
+                response.data = "Shader compiled successfully"
+            else
+                response.success = false
+                response.error = tostring(shaderOrErr)
+            end
+        else
+            response.success = false
+            response.error = "No shader code provided"
+        end
+
+    elseif msg.cmd == "profile_start" then
+        -- Start profiling using debug.sethook
+        _G._love2d_tools_profile = {}
+        _G._love2d_tools_profile_stack = {}
+        local profile = _G._love2d_tools_profile
+        local stack = _G._love2d_tools_profile_stack
+
+        debug.sethook(function(event)
+            local now = love.timer.getTime()
+            local info = debug.getinfo(2, "nSl")
+            if not info then return end
+
+            local name = info.name or "(anonymous)"
+            local source = info.short_src or "?"
+            local line = info.linedefined or 0
+            local key = source .. ":" .. line .. ":" .. name
+
+            if event == "call" or event == "tail call" then
+                stack[#stack + 1] = { key = key, startTime = now }
+                if not profile[key] then
+                    profile[key] = { name = name, source = source, line = line, calls = 0, totalTime = 0, selfTime = 0 }
+                end
+            elseif event == "return" then
+                if #stack > 0 then
+                    local frame = stack[#stack]
+                    if frame.key == key then
+                        local elapsed = now - frame.startTime
+                        local entry = profile[key]
+                        if entry then
+                            entry.calls = entry.calls + 1
+                            entry.totalTime = entry.totalTime + elapsed
+                            entry.selfTime = entry.selfTime + elapsed
+                        end
+                        -- Subtract child time from parent's self time
+                        stack[#stack] = nil
+                        if #stack > 0 then
+                            local parent = profile[stack[#stack].key]
+                            if parent then
+                                parent.selfTime = parent.selfTime - elapsed
+                            end
+                        end
+                    end
+                end
+            end
+        end, "cr")
+
+        response.success = true
+        response.data = "Profiling started"
+
+    elseif msg.cmd == "profile_stop" then
+        -- Stop profiling and return results
+        debug.sethook()
+
+        local profile = _G._love2d_tools_profile or {}
+        local results = {}
+
+        for _, entry in pairs(profile) do
+            if entry.calls > 0 and entry.selfTime > 0.00001 then
+                results[#results + 1] = {
+                    name = entry.name,
+                    source = entry.source,
+                    line = entry.line,
+                    calls = entry.calls,
+                    totalTime = entry.totalTime,
+                    selfTime = math.max(0, entry.selfTime),
+                }
+            end
+        end
+
+        -- Sort by self time descending
+        table.sort(results, function(a, b) return a.selfTime > b.selfTime end)
+
+        -- Limit to top 100 entries
+        local trimmed = {}
+        for i = 1, math.min(100, #results) do
+            trimmed[i] = results[i]
+        end
+
+        _G._love2d_tools_profile = nil
+        _G._love2d_tools_profile_stack = nil
+
+        response.success = true
+        response.data = trimmed
 
     elseif msg.cmd == "ping" then
         response.success = true
@@ -253,7 +457,8 @@ end
 function Bridge.quit()
     if client then client:close() end
     if server then server:close() end
-    os.remove(".love2d-tools-port")
+    local sourceDir = love.filesystem.getSource()
+    os.remove(sourceDir .. "/.love2d-tools-port")
 end
 
 --- Initialize the bridge.
@@ -261,18 +466,23 @@ function Bridge.init()
     startServer()
     Bridge._hookPrint()
 
-    -- Hook into love.update
-    local originalUpdate = love.update or function() end
-    love.update = function(dt)
-        Bridge.update()
-        originalUpdate(dt)
-    end
-
-    -- Hook into love.quit
-    local originalQuit = love.quit or function() end
-    love.quit = function()
-        Bridge.quit()
-        return originalQuit()
+    -- Wrap love.run (the main loop) to inject Bridge.update() every frame.
+    -- love.run is defined by Love2D's boot.lua before main.lua loads,
+    -- so it's always available here. Games almost never override love.run,
+    -- and even if they do, this wrap still works because it captures whatever
+    -- love.run is at require-time (boot.lua's default).
+    -- This avoids the problem of main.lua overwriting love.update / love.load hooks.
+    local originalRun = love.run
+    love.run = function()
+        local step = originalRun()
+        return function()
+            Bridge.update()
+            local result = step()
+            if result then
+                Bridge.quit()
+            end
+            return result
+        end
     end
 end
 

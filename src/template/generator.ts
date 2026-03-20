@@ -101,10 +101,13 @@ end
 `;
 }
 
+/** Line that loads the bridge only when launched from the extension. */
+const BRIDGE_LINE = 'if os.getenv("LOVE2D_TOOLS") then pcall(require, "_love2d_tools_bridge") end\n';
+
 function generateMinimal(dir: string, version: string): void {
   writeFile(path.join(dir, 'conf.lua'), generateConfLua(version));
 
-  writeFile(path.join(dir, 'main.lua'), `function love.load()
+  writeFile(path.join(dir, 'main.lua'), BRIDGE_LINE + `function love.load()
     -- Initialize your game here
 end
 
@@ -121,7 +124,7 @@ end
 function generateGameJam(dir: string, version: string): void {
   writeFile(path.join(dir, 'conf.lua'), generateConfLua(version, 'Game Jam Entry'));
 
-  writeFile(path.join(dir, 'main.lua'), `-- Game Jam Template
+  writeFile(path.join(dir, 'main.lua'), BRIDGE_LINE + `-- Game Jam Template
 -- Organized structure for rapid game development
 
 local currentState = nil
@@ -245,7 +248,7 @@ end
 return StateManager
 `);
 
-  writeFile(path.join(dir, 'main.lua'), `local StateManager = require("lib.state")
+  writeFile(path.join(dir, 'main.lua'), BRIDGE_LINE + `local StateManager = require("lib.state")
 
 local sm = StateManager.new()
 

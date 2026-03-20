@@ -75,6 +75,18 @@ export async function setupIntelliSense(workspaceFolder: vscode.WorkspaceFolder)
   };
   settings['Lua.workspace.checkThirdParty'] = settings['Lua.workspace.checkThirdParty'] || 'Apply';
 
+  // Suppress false positives common in Love2D projects:
+  // - duplicate-set-field: love.load, love.update, love.draw etc. are standard
+  //   callback definitions that conflict with type definitions.
+  // - lowercase-global: Love2D commonly uses lowercase globals (e.g. switchState).
+  const disabledDiags = (settings['Lua.diagnostics.disable'] as string[]) || [];
+  for (const diag of ['duplicate-set-field', 'lowercase-global']) {
+    if (!disabledDiags.includes(diag)) {
+      disabledDiags.push(diag);
+    }
+  }
+  settings['Lua.diagnostics.disable'] = disabledDiags;
+
   fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2), 'utf-8');
 
   // Copy bundled type definitions

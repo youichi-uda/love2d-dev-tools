@@ -1,6 +1,6 @@
 # Love2D Dev Tools — Commercial License
 
-Copyright (c) 2026 abyo-software (Youichi Uda). All rights reserved.
+Copyright (c) 2026 abyo-software. All rights reserved.
 
 ## Terms
 

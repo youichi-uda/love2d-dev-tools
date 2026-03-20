@@ -1,6 +1,70 @@
 # Changelog
 
+## [1.1.0] - 2026-03-20
+
+### Added
+- **Color Palette** — save named colors to `.love-palette.json`, browse and insert from the sidebar tree view. Version-controllable and team-shareable.
+- **Hex Color Conversion** — code action to convert `"#RRGGBB"` / `"#RRGGBBAA"` to Love2D 0-1 float values or `{r, g, b}` table literals
+- **0-255 to 0-1 Conversion** — code action to convert old-style `setColor(255, 128, 64)` and `{255, 128, 64}` to modern 0-1 range
+- Right-click context menu: "Save Color to Palette" in Lua editor
+
+### Changed
+- **Structured Console** moved from Pro to Free
+- **Asset Reference Checker** moved from Pro to Free
+- **Dependency Graph** moved from Pro to Free
+- **Library Manager** moved from Pro to Free
+- Feature count updated: 22 Free / 10 Pro (was 18 Free / 14 Pro)
+- Sidebar Quick Actions reorganized: new "Tools" section for free productivity features
+
+## [1.0.0] - 2026-03-19
+
+Initial public release.
+
+### Added
+
+#### Free Language Features (7 new)
+- **Go to Definition** — Ctrl+Click on `require()` to jump to the file; resolves local function definitions
+- **Find All References** — workspace-wide symbol reference search
+- **Document Symbols** — Ctrl+Shift+O outline for functions, modules, and variables
+- **Inlay Hints** — inline parameter names for Love2D API calls (e.g. `rectangle(mode:, x:, y:, ...)`)
+- **Enhanced Diagnostics** — detects unused `require()` statements with gray-out hint
+- **Code Actions** — Quick Fix to remove unused requires; "Generate function" for undefined calls
+- **Color Picker** — inline color swatches for `setColor()` and `{r, g, b, a}` tables with VS Code picker
+
+#### Pro Features (7 new)
+- **Live REPL** — execute Lua in the running game from a Webview panel with command history
+- **Game State Inspector** — sidebar tree view of global variables/tables with auto-refresh
+- **Asset Browser** — sidebar tree of images, sounds, fonts, shaders with preview and unused detection
+- **Dependency Graph** — interactive Mermaid.js `require()` dependency visualization with circular detection
+- **Shader Live Edit** — save `.glsl` and the shader compiles and applies to the running game instantly
+- **Lua Profiler** — `debug.sethook` profiling with self-time heatmap table
+- **Sprite/Quad Helper** — drag-select regions on a spritesheet to generate `newQuad()` code
+
+#### Bridge Enhancements
+- `inspect` command for Game State Inspector table traversal
+- `shader` command for live GLSL compilation
+- `profile_start` / `profile_stop` commands for Lua Profiler
+- `reload` improved to table-merge strategy preserving existing references and `__index` self-references
+- JSON encoder: added control character (`\uXXXX`) escaping for robust cross-platform communication
+
+#### Cross-Platform Improvements
+- macOS: executable permission check (`fs.accessSync X_OK`), MacPorts path, Apple Silicon priority
+- Linux: `zip` command availability check with OS-specific install hints for `.love` builds
+- All platforms: `execFile` timeout (5s) on all detection subprocesses to prevent hangs
+- All platforms: robust Flatpak command parsing (replaces naive `split(' ')`)
+- All platforms: symlink-safe directory traversal in Asset Browser, Dependency Graph, and Game Jam
+- All platforms: `path.relative()` for cross-platform path comparison (replaces `startsWith`)
+- Bridge client: `localhost` instead of hardcoded `127.0.0.1` for IPv6 compatibility
+- Process management: `proc.pid` null check before kill
+
+### Changed
+- Snippet prefixes changed from `love-xxx` to `lovexxx` (avoids lua-language-server completion conflicts)
+- Hot Reload: upgraded from package.loaded clear to table-merge strategy
+- Version bumped to 1.0.0 for initial public release
+
 ## [0.1.0] - 2026-03-18
+
+Internal development release.
 
 ### Added
 

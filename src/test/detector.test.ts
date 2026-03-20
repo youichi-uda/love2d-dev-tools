@@ -50,7 +50,7 @@ describe('detector', () => {
     const { getLoveVersion } = await import('../runner/detector');
 
     vi.mocked(childProcess.execFile).mockImplementation(
-      ((_cmd: unknown, _args: unknown, cb: unknown) => {
+      ((_cmd: unknown, _args: unknown, _opts: unknown, cb: unknown) => {
         (cb as (err: null, stdout: string) => void)(null, 'LOVE 11.5 (Mysterious Mysteries)');
       }) as unknown as typeof childProcess.execFile,
     );
@@ -63,7 +63,7 @@ describe('detector', () => {
     const { getLoveVersion } = await import('../runner/detector');
 
     vi.mocked(childProcess.execFile).mockImplementation(
-      ((_cmd: unknown, _args: unknown, cb: unknown) => {
+      ((_cmd: unknown, _args: unknown, _opts: unknown, cb: unknown) => {
         (cb as (err: Error, stdout: string) => void)(new Error('not found'), '');
       }) as unknown as typeof childProcess.execFile,
     );

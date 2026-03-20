@@ -3,6 +3,11 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 
+// Mock detectLovePath before importing the module under test
+vi.mock('../runner/detector', () => ({
+  detectLovePath: vi.fn().mockResolvedValue('/usr/bin/love'),
+}));
+
 describe('debug/setup', () => {
   let tmpDir: string;
 
@@ -45,10 +50,12 @@ describe('debug/setup', () => {
     const debugConfig = launch.configurations[0];
     expect(debugConfig.type).toBe('lua-local');
     expect(debugConfig.name).toBe('Love2D: Debug');
+    expect(debugConfig.program.command).toBe('/usr/bin/love');
     expect(debugConfig.args).toContain('debug');
 
     const runConfig = launch.configurations[1];
     expect(runConfig.name).toBe('Love2D: Run');
+    expect(runConfig.program.command).toBe('/usr/bin/love');
     expect(runConfig.args).not.toContain('debug');
   });
 

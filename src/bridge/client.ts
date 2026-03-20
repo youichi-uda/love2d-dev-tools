@@ -76,7 +76,7 @@ export class BridgeClient {
         this.handleDisconnect();
       });
 
-      this.socket.connect(port, '127.0.0.1');
+      this.socket.connect(port, 'localhost');
     });
   }
 

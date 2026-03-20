@@ -23,32 +23,32 @@ describe('snippets/love2d.json', () => {
 
   it('should include all core Love2D callbacks', () => {
     const prefixes = Object.values(snippets).map((s: unknown) => (s as { prefix: string }).prefix);
-    expect(prefixes).toContain('love-load');
-    expect(prefixes).toContain('love-update');
-    expect(prefixes).toContain('love-draw');
-    expect(prefixes).toContain('love-keypressed');
-    expect(prefixes).toContain('love-mousepressed');
-    expect(prefixes).toContain('love-conf');
+    expect(prefixes).toContain('loveload');
+    expect(prefixes).toContain('loveupdate');
+    expect(prefixes).toContain('lovedraw');
+    expect(prefixes).toContain('lovekeypressed');
+    expect(prefixes).toContain('lovemousepressed');
+    expect(prefixes).toContain('loveconf');
   });
 
   it('should include the full game loop snippet', () => {
     const prefixes = Object.values(snippets).map((s: unknown) => (s as { prefix: string }).prefix);
-    expect(prefixes).toContain('love-gameloop');
+    expect(prefixes).toContain('lovegameloop');
   });
 
   it('should include resource loading snippets', () => {
     const prefixes = Object.values(snippets).map((s: unknown) => (s as { prefix: string }).prefix);
-    expect(prefixes).toContain('love-image');
-    expect(prefixes).toContain('love-font');
-    expect(prefixes).toContain('love-sound');
+    expect(prefixes).toContain('loveimage');
+    expect(prefixes).toContain('lovefont');
+    expect(prefixes).toContain('lovesound');
   });
 
   it('should include pattern snippets (class, state, timer, aabb)', () => {
     const prefixes = Object.values(snippets).map((s: unknown) => (s as { prefix: string }).prefix);
-    expect(prefixes).toContain('love-class');
-    expect(prefixes).toContain('love-state');
-    expect(prefixes).toContain('love-timer');
-    expect(prefixes).toContain('love-aabb');
+    expect(prefixes).toContain('loveclass');
+    expect(prefixes).toContain('lovestate');
+    expect(prefixes).toContain('lovetimer');
+    expect(prefixes).toContain('loveaabb');
   });
 
   it('love-gameloop body should contain load, update, and draw', () => {
