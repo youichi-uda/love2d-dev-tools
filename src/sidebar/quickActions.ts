@@ -61,6 +61,7 @@ export class QuickActionsProvider implements vscode.WebviewViewProvider {
     ${b('love2d-tools.showConsole', '&#x1F4DD;', vscode.l10n.t('Structured Console'))}
     ${b('love2d-tools.checkAssets', '&#x1F50D;', vscode.l10n.t('Check Assets'))}
     ${b('love2d-tools.showDependencyGraph', '&#x1F517;', vscode.l10n.t('Dependency Graph'))}
+    ${b('love2d-tools.applyPaletteColor', '&#x1F3A8;', vscode.l10n.t('Apply Palette Color'))}
   </div>
 
   <div class="section">

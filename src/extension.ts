@@ -69,7 +69,7 @@ import { LibraryManager } from './library/manager';
 import { ReplPanel } from './repl/panel';
 import { GameStateInspector } from './inspector/provider';
 import { Love2DColorProvider } from './color/provider';
-import { ColorPaletteProvider, saveColorToPalette, insertPaletteColor, removePaletteColor } from './color/palette';
+import { ColorPaletteProvider, PaletteCompletionProvider, saveColorToPalette, insertPaletteColor, removePaletteColor, applyPaletteColor } from './color/palette';
 // Phase 2: Language features
 import { Love2DDefinitionProvider } from './language/definition';
 import { Love2DReferenceProvider } from './language/references';
@@ -413,6 +413,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       removePaletteColor(item);
       colorPalette.refresh();
     }),
+    vscode.commands.registerCommand('love2d-tools.applyPaletteColor', () => applyPaletteColor()),
     vscode.commands.registerCommand('love2d-tools.refreshPalette', () => colorPalette.refresh()),
     { dispose: () => colorPalette.dispose() },
   );
@@ -420,6 +421,9 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   context.subscriptions.push(
     // Color Picker
     vscode.languages.registerColorProvider(luaSelector, new Love2DColorProvider()),
+
+    // Palette Autocomplete (type palette name in string → color preview + insert)
+    vscode.languages.registerCompletionItemProvider(luaSelector, new PaletteCompletionProvider(), '"', "'"),
 
     // Go to Definition
     vscode.languages.registerDefinitionProvider(luaSelector, new Love2DDefinitionProvider()),

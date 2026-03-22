@@ -31,6 +31,7 @@
   "command.insertPaletteColor": "Love2D: Insert Palette Color",
   "command.removePaletteColor": "Love2D: Remove Palette Color",
   "command.refreshPalette": "Love2D: Refresh Color Palette",
+  "command.applyPaletteColor": "Love2D: Apply Palette Color",
   "config.lovePath": "Path to the `love` executable. Leave empty for auto-detection.",
   "config.loveVersion": "Love2D version used for template generation.",
   "config.hotReloadDebounce": "Debounce interval (ms) for hot reload file watching.",

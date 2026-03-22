@@ -1,4 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import * as path from 'path';
+import * as fs from 'fs';
+import * as os from 'os';
 
 describe('color/provider', () => {
   beforeEach(() => {
@@ -95,6 +98,26 @@ describe('color/provider', () => {
     );
 
     expect(presentations.length).toBeGreaterThan(0);
+    expect(presentations[0].label).toContain('0.5');
+  });
+
+  it('should return only one presentation (no palette mixing)', async () => {
+    const vscode = await import('vscode');
+    const { Love2DColorProvider } = await import('../color/provider');
+
+    const provider = new Love2DColorProvider();
+    const color = new vscode.Color(0.5, 0.3, 0.8, 1);
+
+    const presentations = provider.provideColorPresentations(
+      color,
+      {
+        document: { getText: () => '0.5, 0.3, 0.8, 1' } as never,
+        range: new vscode.Range(new vscode.Position(0, 0), new vscode.Position(0, 18)),
+      },
+      { isCancellationRequested: false } as never,
+    );
+
+    expect(presentations.length).toBe(1);
     expect(presentations[0].label).toContain('0.5');
   });
 });

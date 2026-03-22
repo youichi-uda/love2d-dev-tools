@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0] - 2026-03-23
+
+### Added
+- **Palette Autocomplete** — type a palette color name inside a string literal (e.g. `"sky_blue"`) and see completion suggestions with color preview; selecting one replaces the string with the `{r, g, b}` color table
+- **Apply Palette Color** command — place cursor on any Love2D color, run "Love2D: Apply Palette Color" to pick from saved palette via QuickPick list with hex preview
+- Right-click context menu: "Apply Palette Color" in Lua editor
+- Quick Actions sidebar: "Apply Palette Color" button in Tools section
+
+## [1.1.1] - 2026-03-20
+
+### Fixed
+- Update Discord invite URL
+
 ## [1.1.0] - 2026-03-20
 
 ### Added

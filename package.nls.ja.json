@@ -31,6 +31,7 @@
   "command.insertPaletteColor": "Love2D: パレットの色を挿入",
   "command.removePaletteColor": "Love2D: パレットの色を削除",
   "command.refreshPalette": "Love2D: カラーパレットを更新",
+  "command.applyPaletteColor": "Love2D: パレットの色を適用",
   "config.lovePath": "`love` 実行ファイルのパス。空欄で自動検出します。",
   "config.loveVersion": "テンプレート生成で使用するLove2Dバージョン。",
   "config.hotReloadDebounce": "ホットリロードのファイル監視デバウンス間隔（ms）。",
