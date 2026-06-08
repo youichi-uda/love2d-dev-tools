@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.1] - 2026-06-08
+
+### Fixed
+- **Hot Reload not working on any platform** (#1) — `bridge.lua` was excluded from the packaged extension via `.vscodeignore`, so the bridge module was never deployed to the user's project. The injected `pcall(require, "_love2d_tools_bridge")` in `main.lua` silently failed, the bridge TCP server never started, no port file appeared, and file save events found `bridge.connected === false` and exited early. Added `!src/bridge/bridge.lua` exception to `.vscodeignore`. All bridge-based Pro features (Hot Reload, REPL, Screenshot Preview, Performance Monitor, Profiler, Shader Live Edit, Game State Inspector) were affected.
+
 ## [1.2.0] - 2026-03-23
 
 ### Added

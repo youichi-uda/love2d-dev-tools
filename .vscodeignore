@@ -1,6 +1,7 @@
 .vscode/**
 .vscode-test/**
 src/**
+!src/bridge/bridge.lua
 node_modules/**
 .gitignore
 tsconfig.json
