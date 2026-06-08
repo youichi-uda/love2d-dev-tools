@@ -126,13 +126,22 @@ local function handleCommand(line)
                 -- If both old and new are tables, merge new keys/functions
                 -- into the old table so existing references stay valid.
                 if type(oldModule) == "table" and type(newModule) == "table" then
-                    -- Remove keys not in newModule
-                    for k in pairs(oldModule) do
-                        if newModule[k] == nil then
+                    -- Carry runtime state (non-functions: fonts, images, counters
+                    -- assigned in load() / init()) from old into new. Without this,
+                    -- the new functions' closures point at the freshly-loaded module
+                    -- table where these fields are nil, and draw() crashes.
+                    for k, oldV in pairs(oldModule) do
+                        if newModule[k] == nil and type(oldV) ~= "function" then
+                            newModule[k] = oldV
+                        end
+                    end
+                    -- Clear functions that were removed/renamed in the new version.
+                    for k, oldV in pairs(oldModule) do
+                        if newModule[k] == nil and type(oldV) == "function" then
                             oldModule[k] = nil
                         end
                     end
-                    -- Copy all keys from newModule into oldModule
+                    -- Mirror new keys back into old so external references see the update.
                     for k, v in pairs(newModule) do
                         oldModule[k] = v
                     end

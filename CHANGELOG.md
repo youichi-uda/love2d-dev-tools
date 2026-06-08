@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.2.2] - 2026-06-08
+
+### Fixed
+- **Hot Reload crashed reloaded modules with `bad argument to 'setFont' (Font expected, got nil)`** (#1) — the bridge's module-merge step deleted any old key not present in the freshly-required module, wiping fields assigned at runtime by `load()` / `init()` (fonts, images, accumulators, etc.). It also failed to carry that state into the new module table, so closures inside the reloaded file (whose upvalue points at the new table) saw `nil` for those fields and crashed on the next draw. Fixed by (a) carrying non-function state from old → new so the new closures see it, (b) only deleting old keys whose value was a function (renamed/removed methods), and (c) mirroring the merged result back into the old table so external `require()` references stay valid.
+
 ## [1.2.1] - 2026-06-08
 
 ### Fixed
